@@ -11,11 +11,11 @@ class Logs
 {
     public static function store ($type, $e)
     {
-        if ($type='txt')
+        if ($type=="txt")
         {
             static::storetxt($e);
         }
-        elseif ($type="csv")
+        elseif ($type=="csv")
         {
             static::storecsv($e);
         }

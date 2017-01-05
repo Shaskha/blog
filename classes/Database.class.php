@@ -65,4 +65,9 @@ class Database
         }
     }
 
+    public function getLastinsertedId ()
+    {
+        return $this -> database -> lastInsertId();
+    }
+
 }

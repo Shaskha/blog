@@ -25,6 +25,7 @@ class User
         {
             throw new Exception('email invalide');
         }
+
         try
         {
             $this -> database = new PDO ('mysql:dbname=testdb;host=127.0.0.1', "root", "");
@@ -33,7 +34,7 @@ class User
         {
             Logs::store('csv', $e);
         }
-        $this -> email = $$email;
+        $this -> email = $email;
         $this -> password = $password;
     }
 

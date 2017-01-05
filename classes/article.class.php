@@ -17,8 +17,33 @@ class Article
 
     public function createArticle ($user_Id, $header, $title, $content)
     {
-        $request_string=('insert into articles (header, title, content) values (:header, :title, :content)');
+        $insert_string='insert into articles (header, title, content) values (:header, :title, :content)';
+        $insert_array = array(
+            "header" => $header,
+            "title" => $title,
+            "content" => $content
+        );
         $database = new Database ();
-        $database -> request();
+        if ($database -> request($insert_string, $insert_array))
+        {
+            $link_string = 'insert into author (article_id, author_id) values ($database -> getLastInsertedId(), $user_Id)';
+            if ($database ->request($link_string))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public function editArticle()
+    {
+
     }
 }

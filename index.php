@@ -5,11 +5,12 @@ spl_autoload_register('autoLoad::classesAutoLoader');
 
 try
 {
-  echo "fuck l'objet !";
-  throw new Exception ("Error 404 - Brain Not Found");
+    $user = new User ("quentin-hedouin@orange.fr", "vtff !!!");
+    var_dump($user);
 
 }
 catch(Exception $e)
 {
-  logs::store_csv($e);
+//  Logs::store("csv", $e);
+    Logs::store("csv", $e);
 }
