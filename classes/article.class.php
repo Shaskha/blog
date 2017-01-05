@@ -15,18 +15,26 @@ class Article
     protected $author;
     protected $header;
 
-    public function createArticle ($user_Id, $header, $title, $content)
+    public function __construct ($user_Id, $header, $title, $content)
+    {
+        $this -> author = $user_Id;
+        $this -> header = $header;
+        $this -> title = $title;
+        $this -> content = $content;
+    }
+
+    public function createArticle ()
     {
         $insert_string='insert into articles (header, title, content) values (:header, :title, :content)';
         $insert_array = array(
-            "header" => $header,
-            "title" => $title,
-            "content" => $content
+            "header" => $this -> header,
+            "title" => $this ->title,
+            "content" => $this -> content
         );
         $database = new Database ();
         if ($database -> request($insert_string, $insert_array))
         {
-            $link_string = 'insert into author (article_id, author_id) values ($database -> getLastInsertedId(), $user_Id)';
+            $link_string = 'insert into author (article_id, author_id) values ($database -> getLastInsertedId(), $this -> user_Id)';
             if ($database ->request($link_string))
             {
                 return true;
