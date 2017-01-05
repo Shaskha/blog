@@ -13,7 +13,7 @@ class User
     private $password;
     private $email;
     private $id;
-    private $lastname
+    private $lastname;
     private $firstname;
     private $admin;
     private $error;
@@ -21,7 +21,7 @@ class User
 
     public function __construct($email, $password)
     {
-        if (!(filter_var($mail, FILTER_VALIDATE_EMAIL)))
+        if (!(filter_var($email, FILTER_VALIDATE_EMAIL)))
         {
             throw new Exception('email invalide');
         }
@@ -31,8 +31,7 @@ class User
         }
         catch (PDOException $e)
         {
-            $log = new log();
-            $log -> store('csv', $e);
+            Logs::store('csv', $e);
         }
         $this -> email = $$email;
         $this -> password = $password;
@@ -96,9 +95,6 @@ class User
         {
             return false;
         }
-
-
-
     }
 
     public function login ()
@@ -111,7 +107,8 @@ class User
 
         if ($request != false)
         {
-            $request = $request => fetch();
+            $request = $request -> fetch();
+            session_start();
             $_SESSION['nickname'] = $request['nickname'];
             $_SESSION['firstname'] = $request['firstname'];
             $_SESSION['lastname'] = $request['lastname'];
@@ -123,7 +120,6 @@ class User
         {
             return false;
         }
-
     }
 
     public function logout ()

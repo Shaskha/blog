@@ -7,7 +7,7 @@
  * Time: 14:09
  */
 
-class logs
+class Logs
 {
     public static function store ($type, $e)
     {
@@ -29,7 +29,7 @@ class logs
     {
         if (gettype($e)=='object')
         {
-            $e = $e -> getMessage()
+            $e = $e -> getMessage();
         }
         return $e;
     }
@@ -49,7 +49,7 @@ class logs
     {
         $date = new DateTime();
         $date -> setTimeZone (new DateTimeZone('EUROPE/PARIS'));
-        $log = array($date->format('Y-m-d h:i:s'), static::errormessage($e);
+        $log = array($date->format('Y-m-d h:i:s'), static::errormessage($e));
         $log_file = fopen("logs/logs_".$date->format('d-m-Y').".csv", "a+");
         fputcsv($log_file, $log, ",");
         fclose($log_file);
