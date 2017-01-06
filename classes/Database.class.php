@@ -9,27 +9,23 @@
 class Database
 {
     private $database;
-    private $dbname;
-    private $host;
-    private $username;
-    private $password;
+    private $dbname = "blog";
+    private $host = "localhost";
+    private $username = "root";
+    private $password = "";
 
 
-    public function __construct ($host, $dbname, $username, $password)
+    public function __construct ()
     {
-        $this -> host = $host;
-        $this -> dbname = $dbname;
-        $this -> username = $username;
-        $this -> password = $password;
-
         $this -> setDatabase();
     }
 
-    public function setDatabase ()
+    private function setDatabase ()
     {
         try
         {
             $this -> database = new PDO ('mysql:dbname='.$this -> dbname.';host='.$this -> host, $this -> username, $this -> password);
+            $this -> database -> exec('SET NAMES utf8');
         }
         catch (PDOException $e)
         {
@@ -53,13 +49,14 @@ class Database
             }
             else
             {
-                if ($pdo_stmt == false)
+                $result = $pdo_stmt -> fetchall();
+                if ($result == false)
                 {
                     return true;
                 }
                 else
                 {
-                    return $pdo_stmt -> fetchall();
+                    return $result;
                 }
             }
         }

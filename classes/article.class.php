@@ -14,29 +14,34 @@ class Article
     protected $date;
     protected $author;
     protected $header;
+    protected $database;
 
-    public function __construct ($user_Id, $header, $title, $content)
+    public function __construct()
     {
-        $this -> author = $user_Id;
-        $this -> header = $header;
-        $this -> title = $title;
-        $this -> content = $content;
+        $this -> database = new Database ();
     }
 
-    public function createArticle ()
+    public function createArticle ($user_Id, $title, $header, $content)
     {
-        $insert_string='insert into articles (header, title, content) values (:header, :title, :content)';
+        $insert_string='insert into article (header, title, content, date_pub) values (:header, :title, :content, now())';
         $insert_array = array(
-            "header" => $this -> header,
-            "title" => $this ->title,
-            "content" => $this -> content
+            "header" => $header,
+            "title" => $title,
+            "content" => $content
         );
-        $database = new Database ();
-        if ($database -> request($insert_string, $insert_array))
+        if ($this -> database -> request($insert_string, $insert_array))
         {
-            $link_string = 'insert into author (article_id, author_id) values ($database -> getLastInsertedId(), $this -> user_Id)';
-            if ($database ->request($link_string))
+            $link_string = 'insert into author (id_article, id_author) values (:id_article, :id_author)';
+            $link_array = array(
+                "id_article" => intval($this -> database -> getLastInsertedId()),
+                "id_author" => $user_Id);
+            if ($this -> database ->request($link_string, $link_array))
             {
+
+                $this -> author = $user_Id;
+                $this -> header = $header;
+                $this -> title = $title;
+                $this -> content = $content;
                 return true;
             }
             else
@@ -50,8 +55,27 @@ class Article
         }
     }
 
-    public function editArticle()
+    public function editArticle($article_id, $title, $header, $content)
     {
+        $update_string = "update articles set title = :title, header = :header, content = :content where id = :id";
+        $update_array=array(
+            "id"=>$article_id,
+            "title" => $title,
+            "header" => $header,
+            "content" => $content
+                );
+        $this -> database -> request($update_string, $update_array);
 
+    }
+
+    public function showArticle ($article_id)
+    {
+        $select_string = "select * from article where id = :id";
+        $article = $this -> database ->request($select_string, array("id" => $article_id));
+        $this -> title = $article[0]['title'];
+        $this -> header = $article[0]['header'];
+        $this -> content = $article[0]['content'];
+
+        require('./template/article.php');
     }
 }
